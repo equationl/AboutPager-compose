@@ -11,7 +11,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -25,13 +27,15 @@ fun ModuleItem(
     backGroundColor: Color = Color.Unspecified,
     border: BorderStroke? = null,
     elevation: Dp = 1.dp,
+    shape: Shape = MaterialTheme.shapes.medium,
+    titleStyle: TextStyle = MaterialTheme.typography.h5,
     content: @Composable () -> Unit
 ) {
     Column {
         if (title != null) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.h5,
+                style = titleStyle,
                 modifier = Modifier.padding(start = 6.dp)
             )
         }
@@ -42,7 +46,8 @@ fun ModuleItem(
             modifier = modifier.fillMaxWidth(),
             backgroundColor = backGroundColor,
             border = border,
-            elevation = elevation
+            elevation = elevation,
+            shape = shape
         ) {
             Column(modifier = Modifier.padding(8.dp)) {
                 content()
@@ -74,18 +79,20 @@ fun NormalSubItem(
     startText: String,
     modifier: Modifier = Modifier,
     endText: String? = null,
+    startTextStyle: TextStyle = LocalTextStyle.current,
+    endTextStyle: TextStyle = LocalTextStyle.current,
     endIcon: (@Composable () -> Unit)? = null,
     onClick: (() -> Unit)? = null
 ) {
     BaseSubItem(
         modifier = if (onClick != null) modifier.clickable { onClick() } else modifier,
         startContent = {
-            Text(text = startText)
+            Text(text = startText, style = startTextStyle)
         },
         endContent = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (endText != null) {
-                    Text(text = endText)
+                    Text(text = endText, style = endTextStyle)
                 }
                 if (endIcon != null) {
                     endIcon()
@@ -101,6 +108,9 @@ fun NormalWithStartIconSubItem(
     text: String,
     modifier: Modifier = Modifier,
     subText: String? = null,
+    textStyle: TextStyle = MaterialTheme.typography.h6,
+    subTextStyle: TextStyle = MaterialTheme.typography.body2,
+    isAlignIcon: Boolean = true,
     startIcon: (@Composable () -> Unit)? = null,
     onClick: (() -> Unit)? = null
 ) {
@@ -109,16 +119,16 @@ fun NormalWithStartIconSubItem(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
         startContent = {
-            Column(Modifier.fillMaxWidth(0.2f)) {
+            Column(Modifier.fillMaxWidth(if (!isAlignIcon && startIcon == null) 0f else 0.2f)) {
                 if (startIcon != null) {
                     startIcon()
                 }
             }
 
             Column(modifier = Modifier.padding(start = 6.dp).fillMaxWidth(0.8f)) {
-                Text(text = text, style = MaterialTheme.typography.h6)
+                Text(text = text, style = textStyle)
                 if (subText != null) {
-                    Text(text = subText, style = MaterialTheme.typography.body2)
+                    Text(text = subText, style = subTextStyle)
                 }
             }
         },
@@ -141,6 +151,10 @@ fun NormalSubItemModule(
     border: BorderStroke? = null,
     elevation: Dp = 1.dp,
     itemPadding: Dp = 6.dp,
+    startTextStyle: TextStyle = LocalTextStyle.current,
+    endTextStyle: TextStyle = LocalTextStyle.current,
+    cardShape: Shape = MaterialTheme.shapes.medium,
+    titleStyle: TextStyle = MaterialTheme.typography.h5,
     extraContent: (@Composable () -> Unit)? = null,
     onClick: ((clickNo: Int) -> Unit)? = null
 ) {
@@ -149,7 +163,9 @@ fun NormalSubItemModule(
         modifier = modifier,
         backGroundColor = backGroundColor,
         border = border,
-        elevation = elevation
+        elevation = elevation,
+        shape = cardShape,
+        titleStyle = titleStyle
     ) {
         if (showAllDivider) {
             Divider(modifier = Modifier.padding(bottom = itemPadding))
@@ -162,7 +178,9 @@ fun NormalSubItemModule(
                     if (onClick == null) null
                     else { { onClick(index) } },
                 endText = normalSubItemData.endText,
-                modifier = Modifier.padding(bottom = itemPadding)
+                modifier = Modifier.padding(bottom = if (!showAllDivider && index == itemList.lastIndex) 0.dp else itemPadding),
+                startTextStyle = startTextStyle,
+                endTextStyle = endTextStyle
             )
             if (showDivider && index != itemList.lastIndex) {
                 Divider(modifier = Modifier.padding(bottom = itemPadding))
@@ -192,6 +210,11 @@ fun NormalWithStartIconSubItemModule(
     border: BorderStroke? = null,
     elevation: Dp = 1.dp,
     itemPadding: Dp = 6.dp,
+    isAlignIcon: Boolean = true,
+    textStyle: TextStyle = MaterialTheme.typography.h6,
+    subTextStyle: TextStyle = MaterialTheme.typography.body2,
+    cardShape: Shape = MaterialTheme.shapes.medium,
+    titleStyle: TextStyle = MaterialTheme.typography.h5,
     extraContent: (@Composable () -> Unit)? = null,
     onClick: ((clickNo: Int) -> Unit)? = null
 ) {
@@ -200,7 +223,9 @@ fun NormalWithStartIconSubItemModule(
         modifier = modifier,
         backGroundColor = backGroundColor,
         border = border,
-        elevation = elevation
+        elevation = elevation,
+        shape = cardShape,
+        titleStyle = titleStyle
     ) {
         if (showAllDivider) {
             Divider(modifier = Modifier.padding(bottom = itemPadding))
@@ -213,7 +238,10 @@ fun NormalWithStartIconSubItemModule(
                 onClick =
                 if (onClick == null) null
                 else { { onClick(index) } },
-                modifier = Modifier.padding(bottom = itemPadding)
+                modifier = Modifier.padding(bottom = itemPadding),
+                textStyle = textStyle,
+                subTextStyle = subTextStyle,
+                isAlignIcon = isAlignIcon
             )
             if (showDivider && index != itemList.lastIndex) {
                 Divider(modifier = Modifier.padding(bottom = itemPadding))
@@ -353,7 +381,7 @@ fun PreviewNormalWithStartIconSubItemModule() {
 
     Column(Modifier.fillMaxSize()) {
         NormalWithStartIconSubItemModule(
-            itemList1, title = "模块1"
+            itemList1, title = "模块1", isAlignIcon = false
         )
         NormalWithStartIconSubItemModule(
             itemList1, title = "模块2"

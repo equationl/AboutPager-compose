@@ -3,6 +3,7 @@ package com.equationl.aboutpager_compose.about_pager
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -29,9 +31,10 @@ fun BaseTextItem(
 @Composable
 fun RightsTextItem(
     dateText: String,
-    name: String
+    name: String,
+    style: TextStyle = LocalTextStyle.current
 ) {
-    Text(text = "Copyright © $dateText $name All Rights Reserved.")
+    Text(text = "Copyright © $dateText $name All Rights Reserved.", style = style)
 }
 
 @Composable
