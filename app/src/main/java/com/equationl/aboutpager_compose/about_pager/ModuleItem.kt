@@ -19,6 +19,18 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.equationl.aboutpager_compose.R
 
+/**
+ * 一个独立的模块，使用 Card 作为载体
+ *
+ * @param modifier Modifier
+ * @param title 模块标题，会被置于载体 Card 之外
+ * @param backGroundColor Card 背景颜色
+ * @param border Card 变宽
+ * @param elevation Card 高度（会影响 Card 的阴影深度）
+ * @param shape Card 形状（可自定义形状或增加圆角）
+ * @param titleStyle 标题文本的样式
+ * @param content 内容
+ * */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ModuleItem(
@@ -33,6 +45,7 @@ fun ModuleItem(
 ) {
     Column {
         if (title != null) {
+            // 将标题文本放到 Card 外面，这样比较美观
             Text(
                 text = title,
                 style = titleStyle,
@@ -41,8 +54,8 @@ fun ModuleItem(
         }
 
         Card(
-            onClick = { },
-            enabled = false,
+            onClick = { }, // 其实这里只是将 card 作为外部载体使用，不需要直接点击 card，但是这个参数是必须的，所以直接传一个空的给它
+            enabled = false, // 禁用点击
             modifier = modifier.fillMaxWidth(),
             backgroundColor = backGroundColor,
             border = border,
@@ -56,6 +69,15 @@ fun ModuleItem(
     }
 }
 
+/**
+ * 基础 Item 载体，使用 Row 作为载体承载内容
+ *
+ * @param startContent 左边的内容
+ * @param endContent 右边的内容
+ * @param modifier Modifier
+ * @param horizontalArrangement 水平对齐方式
+ * @param verticalAlignment 垂直对齐方式
+ * */
 @Composable
 fun BaseSubItem(
     startContent: @Composable () -> Unit,
@@ -74,6 +96,17 @@ fun BaseSubItem(
     }
 }
 
+/**
+ * 一般 Item，显示效果形如普通文本列表，但是可以添加尾部图标与尾部文字，建议包裹在 [NormalSubItemModule] 使用
+ *
+ * @param startText 主文本，位于列表最左边
+ * @param modifier Modifier
+ * @param endText 辅助文本，位于列表最右边，但是在 [endIcon] 左边
+ * @param startTextStyle 主文本样式
+ * @param endTextStyle 辅助文本样式
+ * @param endIcon 尾部图标
+ * @param onClick 点击回调
+ * */
 @Composable
 fun NormalSubItem(
     startText: String,
@@ -85,6 +118,7 @@ fun NormalSubItem(
     onClick: (() -> Unit)? = null
 ) {
     BaseSubItem(
+        // 这里如果没有设置点击回调则不添加 clickable，因为如果即使添加的是空 lambda 也会有点击涟漪效果，不太美观
         modifier = if (onClick != null) modifier.clickable { onClick() } else modifier,
         startContent = {
             Text(text = startText, style = startTextStyle)
@@ -103,6 +137,18 @@ fun NormalSubItem(
     )
 }
 
+/**
+ * 带有前导图标的一般 Item ，显示效果类似对话框，建议包裹在 [NormalWithStartIconSubItemModule] 中使用
+ *
+ * @param text 主文本
+ * @param modifier Modifier
+ * @param subText 辅助文本
+ * @param textStyle 主文本样式
+ * @param subTextStyle 辅助文本样式
+ * @param isAlignIcon 是否留空，如果设置为 true，那么即使没有图标也会将图标位置留空占位
+ * @param startIcon 图标
+ * @param onClick 点击回调
+ * */
 @Composable
 fun NormalWithStartIconSubItem(
     text: String,
@@ -119,6 +165,7 @@ fun NormalWithStartIconSubItem(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
         startContent = {
+            // 如果条件满足的话，即使图标为空，也要把位置留空出来，即 fillMaxWidth(0.2f)
             Column(Modifier.fillMaxWidth(if (!isAlignIcon && startIcon == null) 0f else 0.2f)) {
                 if (startIcon != null) {
                     startIcon()
@@ -132,13 +179,30 @@ fun NormalWithStartIconSubItem(
                 }
             }
         },
+        // 由于该组件风格不是严格的左右布局，所以这里将内容全放入 startContent 中，不使用 endContent
         endContent = {  }
     )
 }
 
 /**
  *
+ * 用于承载 [NormalSubItem] 的模块，会将传入的所有 [NormalSubItem] 放入同一个 Card 中
+ *
+ * @param itemList 内容列表
  * @param modifier 承载这个 module 的父 composable 的 modifier
+ * @param title 该模块标题
+ * @param showDivider 是否在 item 之间显示分割线
+ * @param showAllDivider 是否在第一个 item 之前 和 最后一个 item 之后显示分割线
+ * @param backGroundColor 模块背景颜色
+ * @param border 模块边框
+ * @param elevation 模块高度（影响阴影深度）
+ * @param itemPadding item 之间的 padding
+ * @param startTextStyle 主文本样式
+ * @param endTextStyle 辅助文本样式
+ * @param cardShape 模块形状
+ * @param titleStyle 标题样式
+ * @param extraContent 额外的子定义内容，会在最后显示
+ * @param onClick 点击回调，参数为点击的 item 索引
  * */
 @Composable
 fun NormalSubItemModule(
@@ -197,7 +261,23 @@ fun NormalSubItemModule(
 
 /**
  *
+ * 用于承载 [NormalWithStartIconSubItem] 的模块，会将传入的所有 [NormalWithStartIconSubItem] 放入同一个 Card 中
+ *
+ * @param itemList 内容列表
  * @param modifier 承载这个 module 的父 composable 的 modifier
+ * @param title 该模块标题
+ * @param showDivider 是否在 item 之间显示分割线
+ * @param showAllDivider 是否在第一个 item 之前 和 最后一个 item 之后显示分割线
+ * @param backGroundColor 模块背景颜色
+ * @param border 模块边框
+ * @param elevation 模块高度（影响阴影深度）
+ * @param itemPadding item 之间的 padding
+ * @param textStyle 主文本样式
+ * @param subTextStyle 辅助文本样式
+ * @param cardShape 模块形状
+ * @param titleStyle 标题样式
+ * @param extraContent 额外的子定义内容，会在最后显示
+ * @param onClick 点击回调，参数为点击的 item 索引
  * */
 @Composable
 fun NormalWithStartIconSubItemModule(

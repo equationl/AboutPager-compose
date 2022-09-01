@@ -457,7 +457,7 @@ val boxSampleIcon = @Composable {
 }
 
 
-@Preview()
+@Preview
 @Composable
 fun PreviewDemo() {
     Column(modifier = Modifier.fillMaxSize()) {

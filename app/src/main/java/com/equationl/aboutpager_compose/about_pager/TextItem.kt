@@ -18,6 +18,9 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * 基础纯文本 item
+ * */
 @Composable
 fun BaseTextItem(
     modifier: Modifier = Modifier,
@@ -28,6 +31,9 @@ fun BaseTextItem(
     }
 }
 
+/**
+ * 版权信息文本
+ * */
 @Composable
 fun RightsTextItem(
     dateText: String,
@@ -37,6 +43,9 @@ fun RightsTextItem(
     Text(text = "Copyright © $dateText $name All Rights Reserved.", style = style)
 }
 
+/**
+ * 可点击的链接文本
+ * */
 @Composable
 fun LinkText(
     text: String,
@@ -52,6 +61,9 @@ fun LinkText(
         modifier = modifier.noRippleClickable(onClick = onClick) )
 }
 
+/**
+ * 没有点击涟漪效果的 Clickable
+ * */
 inline fun Modifier.noRippleClickable(crossinline onClick: ()->Unit): Modifier = composed {
     clickable(indication = null,
         interactionSource = remember { MutableInteractionSource() }) {

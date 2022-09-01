@@ -14,6 +14,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.equationl.aboutpager_compose.R
 
+/**
+ * 头部 APP 信息垂直显示基础 Item
+ *
+ * @param iconContent 图标内容
+ * @param textContent 文本内容
+ * @param modifier Modifier
+ * */
 @Composable
 fun AppInfoVerticalItem(
     iconContent: @Composable () -> Unit,
@@ -26,6 +33,16 @@ fun AppInfoVerticalItem(
     }
 }
 
+/**
+ * 头部 APP 信息垂直显示 item
+ *
+ * @param iconPaint APP 图标
+ * @param modifier Modifier
+ * @param text 主文本
+ * @param subText 主文本下方的补充文本
+ * @param textStyle 主文本样式
+ * @param subTextStyle 补充文本样式
+ * */
 @Composable
 fun AppInfoVerticalItem(
     iconPaint: Painter,
@@ -68,6 +85,13 @@ fun AppInfoVerticalItem(
     )
 }
 
+/**
+ * 头部 APP 信息水平显示基础 Item
+ *
+ * @param iconContent 图标内容
+ * @param textContent 文本内容
+ * @param modifier Modifier
+ * */
 @Composable
 fun AppInfoHorizontalItem(
     iconContent: @Composable () -> Unit,
@@ -80,6 +104,14 @@ fun AppInfoHorizontalItem(
     }
 }
 
+/**
+ * 头部 APP 信息水平显示 item
+ *
+ * @param iconPaint APP 图标
+ * @param modifier Modifier
+ * @param text 主文本
+ * @param subText 主文本下方的补充文本
+ * */
 @Composable
 fun AppInfoHorizontalItem(
     iconPaint: Painter,
